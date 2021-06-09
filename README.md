@@ -55,13 +55,30 @@ Stack:
 +---------------------------------+---> ebp - 0xc
 |              0x0                |
 +---------------------------------+---> ebp - 0x10
-                ... ---> 0x14 bytes
+                ... ---> 16 bytes
 +---------------------------------+
 |               buf               |
 +---------------------------------+---> ebp - 0x24
 ```  
 
 Vậy để thay đổi giá trị của biến `var` tại ô nhớ `ebp - 0xc`, chúng ta cần nhập giá trị cho biến `buf` với độ dài `0x1c` (`28`) bytes. Trong đó, `20` bytes đầu để fill hết vùng nhớ của `buf`, 4 bytes tiếp theo để ghi đè biến `another_var` tại ô nhớ `ebp - 0x10`, và 4 bytes cuối cùng là giá trị `student_id`.  
+
+Stack khi bị overflowed.  
+```
++---------------------------------+
+|           saved ebp             |
++---------------------------------+---> ebp của hàm smash_my_buffer()
+                ...
++---------------------------------+
+|           0x0129ddd6            |---> 0x0129ddd6 = hex(19520982)
++---------------------------------+---> ebp - 0xc
+|             'AAAA'              |
++---------------------------------+---> ebp - 0x10
+                ... ---> 16 bytes
++---------------------------------+
+|             'AAAA'               |
++---------------------------------+---> ebp - 0x24
+```
 
 Viết script exploit:  
 ```python
